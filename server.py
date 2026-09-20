@@ -308,6 +308,16 @@ class NPSRequest(BaseModel):
     employerCategory: str = "govt"
 
 
+@app.get("/api")
+def api_root():
+    return {"ok": True, "service": "Personal CA API", "health": "/api/health"}
+
+
+@app.get("/api/")
+def api_root_slash():
+    return api_root()
+
+
 @app.get("/api/health")
 def health():
     return {
@@ -493,6 +503,12 @@ def save_profile(body: ProfileBody, request: Request):
         "dateOfBirth": dec(row["date_of_birth"]),
         "gender": dec(row["gender"]),
     }
+
+
+@app.post("/api/auth/profile")
+def auth_profile_alias(body: ProfileBody, request: Request):
+    """Compatibility alias for the frontend profile endpoint."""
+    return save_profile(body, request)
 
 
 @app.get("/api/profile")
